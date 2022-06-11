@@ -1,4 +1,4 @@
-package idd.demo.acceptance
+package idd.demo.it
 
 import idd.demo.module
 import io.ktor.server.application.*
@@ -15,6 +15,8 @@ abstract class BaseIT {
     companion object {
 
         private lateinit var server: ApplicationEngine
+
+        const val UUID_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 
         @BeforeClass
         @JvmStatic
