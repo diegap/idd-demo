@@ -4,7 +4,8 @@
 package idd.demo
 
 import idd.demo.actions.RegisterUser
-import idd.demo.infra.rest.representations.UserRegistrationResponse
+import idd.demo.infra.rest.representations.UserRegistrationNoOkResponse
+import idd.demo.infra.rest.representations.UserRegistrationOkResponse
 import idd.demo.infra.rest.representations.UserRepresentation
 import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
@@ -50,9 +51,9 @@ fun Application.configureRouting() {
             }
 
             if (actionResult.isSuccess) {
-                call.respond(Created, UserRegistrationResponse(actionResult.value))
+                call.respond(Created, UserRegistrationOkResponse(actionResult.value))
             } else {
-                call.respond(BadRequest, UserRegistrationResponse(actionResult.value))
+                call.respond(BadRequest, UserRegistrationNoOkResponse(actionResult.value))
             }
         }
     }
