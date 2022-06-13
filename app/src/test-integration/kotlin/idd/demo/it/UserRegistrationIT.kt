@@ -55,7 +55,7 @@ class UserRegistrationIT : BaseIT() {
                     {
                         "username": "jesus.quintana",
                         "password": "eqeWjeriu!2",
-                        "about": "nobody fuc*s with the Jesus!"
+                        "about": "nobody fu#*s with the Jesus!"
                     }
                 """.trimIndent()
             )

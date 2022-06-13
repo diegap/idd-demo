@@ -3,12 +3,18 @@
  */
 package idd.demo
 
+import idd.demo.actions.RegisterUser
+import idd.demo.infra.rest.representations.UserRegistrationResponse
+import idd.demo.infra.rest.representations.UserRepresentation
 import io.ktor.http.*
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
+import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
@@ -27,6 +33,8 @@ fun Application.configureSerialization() {
     }
 }
 
+val registerUser = RegisterUser()
+
 fun Application.configureRouting() {
     routing {
 
@@ -34,6 +42,19 @@ fun Application.configureRouting() {
             call.respond(HttpStatusCode.OK, "Hello, world!")
         }
 
+        post("/users") {
+            val userRepresentation = call.receive<UserRepresentation>()
+
+            val actionResult = with(userRepresentation) {
+                registerUser.invoke(username, password, about)
+            }
+
+            if (actionResult.isSuccess) {
+                call.respond(Created, UserRegistrationResponse(actionResult.value))
+            } else {
+                call.respond(BadRequest, UserRegistrationResponse(actionResult.value))
+            }
+        }
     }
 }
 
