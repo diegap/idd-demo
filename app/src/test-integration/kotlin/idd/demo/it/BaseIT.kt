@@ -28,6 +28,7 @@ abstract class BaseIT {
         }
 
         @AfterClass
+        @JvmStatic
         fun tearDown(){
             server.stop()
         }
