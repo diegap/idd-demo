@@ -4,9 +4,15 @@
 package idd.demo
 
 import idd.demo.actions.RegisterUser
+import idd.demo.infra.repositories.InMemoryUserRepository
 import idd.demo.infra.rest.representations.UserRegistrationNoOkResponse
 import idd.demo.infra.rest.representations.UserRegistrationOkResponse
 import idd.demo.infra.rest.representations.UserRepresentation
+import idd.demo.model.textanalyzer.TextAnalyzerService
+import idd.demo.model.users.User
+import idd.demo.model.users.UserId
+import idd.demo.model.users.UserRepository
+import idd.demo.model.users.UserService
 import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
@@ -19,6 +25,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
+import java.util.*
 
 fun Application.module() {
     configureRouting()
@@ -34,7 +41,14 @@ fun Application.configureSerialization() {
     }
 }
 
-val registerUser = RegisterUser()
+val registerUser = RegisterUser(UserService(
+    InMemoryUserRepository(),
+    object : TextAnalyzerService {
+        override fun isAllowed(text: String): Boolean {
+            return true
+        }
+    }
+))
 
 fun Application.configureRouting() {
     routing {
